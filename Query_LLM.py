@@ -1,7 +1,5 @@
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from dotenv import load_dotenv
+import google.generativeai as genai
 import os
 import json
 import asyncio
@@ -11,23 +9,15 @@ INPUT_FILE = "questions.jsonl"
 OUTPUT_FILE = "response.jsonl"
 
 async def query_llm(question_list : list[str]):
-    model = ChatGoogleGenerativeAI(google_api_key=os.getenv('GOOGLE_API_KEY'), model="gemini-1.5-flash")
-
+    genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))
+    
+    model = genai.GenerativeModel(model_name="tunedModels/test-rghw9g8zz717")
     for question in question_list:
-        system_message = "You are a helpful assistant"
-        user_message = question
-        query_list = []
-        query_list.append({"system": system_message, "user": user_message})
-        prompt = ChatPromptTemplate.from_messages([("system", "{system}"),("human", "{user}"),])
-        run = prompt | model
-        responses = await run.abatch(query_list)
-        count = 0
-        for batch_item in responses:
-            with open(OUTPUT_FILE, mode='a') as f:
-                f.write(json.dumps({
-                    'response': batch_item.dict()
-                }) + '\n')
-            count = count + 1
+        result = model.generate_content(question["Prompt"])
+        with open(OUTPUT_FILE, mode='a') as f:
+            f.write(json.dumps({
+                'response': result.text
+            }) + '\n')
 
 
 def main() :
