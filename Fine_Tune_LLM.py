@@ -1,10 +1,10 @@
 import google.generativeai as genai
-from google.colab import userdata
 import os
 from dotenv import load_dotenv
 
 import pandas as pd
 import seaborn as sns
+import time
 
 load_dotenv()
 
@@ -61,7 +61,6 @@ training_data=[
     ]
 
 operation = genai.create_tuned_model(
-    # You can use a tuned model here too. Set `source_model="tunedModels/..."`
     display_name="increment",
     source_model=base_model,
     epoch_count=20,
