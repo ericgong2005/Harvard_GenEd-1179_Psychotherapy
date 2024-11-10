@@ -5,60 +5,21 @@ from dotenv import load_dotenv
 import pandas as pd
 import seaborn as sns
 import time
+import json
+
+TRAINING_DATA_FILE = "training_data.jsonl"
 
 load_dotenv()
 
 genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))
 
 base_model = "models/gemini-1.5-flash-001-tuning"
-training_data=[
-        {
-             'text_input': '1',
-             'output': '2',
-        },{
-             'text_input': '3',
-             'output': '4',
-        },{
-             'text_input': '-3',
-             'output': '-2',
-        },{
-             'text_input': 'twenty two',
-             'output': 'twenty three',
-        },{
-             'text_input': 'two hundred',
-             'output': 'two hundred one',
-        },{
-             'text_input': 'ninety nine',
-             'output': 'one hundred',
-        },{
-             'text_input': '8',
-             'output': '9',
-        },{
-             'text_input': '-98',
-             'output': '-97',
-        },{
-             'text_input': '1,000',
-             'output': '1,001',
-        },{
-             'text_input': '10,100,000',
-             'output': '10,100,001',
-        },{
-             'text_input': 'thirteen',
-             'output': 'fourteen',
-        },{
-             'text_input': 'eighty',
-             'output': 'eighty one',
-        },{
-             'text_input': 'one',
-             'output': 'two',
-        },{
-             'text_input': 'three',
-             'output': 'four',
-        },{
-             'text_input': 'seven',
-             'output': 'eight',
-        }
-    ]
+
+training_data = []
+with open(TRAINING_DATA_FILE, 'r') as file:
+    for line in file:
+        entry = json.loads(line)
+        training_data.append(entry)
 
 operation = genai.create_tuned_model(
     display_name="increment",
