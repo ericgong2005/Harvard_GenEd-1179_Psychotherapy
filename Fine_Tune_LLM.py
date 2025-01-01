@@ -1,3 +1,9 @@
+'''
+Fine_Tune_LLM.py creates a fine-tuned LLM model from the specified PRETUNED_MODEL 
+based on the example clinical vignettes provided by the TUNING_FILE, as specified 
+in config.yaml, writing the final tuned model name to the config.yaml as TUNED_MODEL
+'''
+
 import google.generativeai as genai
 import os
 from dotenv import load_dotenv
@@ -7,38 +13,49 @@ import seaborn as sns
 import time
 import json
 
-TRAINING_DATA_FILE = "training_data.jsonl"
+from helpers import get_config, set_config
 
-load_dotenv()
+def finetune():
+    load_dotenv()
 
-genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))
+    config = get_config()
+    
+    genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))
 
-base_model = "models/gemini-1.5-flash-001-tuning"
+    base_model = config.get("PRETUNED_MODEL")
 
-training_data = []
-with open(TRAINING_DATA_FILE, 'r') as file:
-    for line in file:
-        entry = json.loads(line)
-        training_data.append(entry)
+    tuning_data = []
+    with open(config["TUNING_FILE"], 'r') as file:
+        for line in file:
+            entry = json.loads(line)
+            formatted_entry = {"text_input": config["PROMPT"] + "\n" + entry["Description"], 
+                               "output": entry["Diagnostic Impressions"] + "\n" + entry["Diagnosis"]}
+            tuning_data.append(formatted_entry)
 
-operation = genai.create_tuned_model(
-    display_name="increment",
-    source_model=base_model,
-    epoch_count=20,
-    batch_size=4,
-    learning_rate=0.001,
-    training_data=training_data,
-)
+    operation = genai.create_tuned_model(
+        display_name="increment",
+        source_model=base_model,
+        epoch_count=20,
+        batch_size=4,
+        learning_rate=0.001,
+        training_data=tuning_data,
+    )
 
-for status in operation.wait_bar():
-    time.sleep(10)
+    for status in operation.wait_bar():
+        time.sleep(10)
 
-result = operation.result()
-print(result)
+    result = operation.result()
+    print(result)
 
-snapshots = pd.DataFrame(result.tuning_task.snapshots)
-sns.lineplot(data=snapshots, x='epoch', y='mean_loss')
+    snapshots = pd.DataFrame(result.tuning_task.snapshots)
+    sns.lineplot(data=snapshots, x='epoch', y='mean_loss')
 
-model = genai.GenerativeModel(model_name=result.name)
-result = model.generate_content("III")
-print(result.text)  # IV
+    model = genai.GenerativeModel(model_name=result.name)
+    print(f"Tuned Model Name: {model}")
+
+    config["TUNED_MODEL"] = model
+
+    set_config(config)
+            
+if __name__ == '__main__':
+    finetune()

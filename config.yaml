@@ -1,0 +1,15 @@
+# File Paths containing .jsonl formatted data for Tuning, Querying, and storing resulting Output
+TUNING_FILE: training_data.jsonl
+QUERY_FILE: questions.jsonl
+OUTPUT_FILE: response.jsonl
+
+# Model used for tuning and Querying
+PRETUNED_MODEL: "models/gemini-1.5-flash-001-tuning"
+TUNED_MODEL: "tunedModels/test-rghw9g8zz717"
+
+# File Path for Clinical Vignette PDFs
+TUNING_VIGNETTE: Vignettes/tuning_casebook.pdf
+QUERY_VIGNETTE: Vignettes/query_casebook.pdf
+
+# Prompt For Querying LLMs
+PROMPT: "Based on the following Clinical Vignette, determine what Mental Disorders the patient may be experiencing, as per DSM-5 definitions of Mental Disorders. Note that the vignette is fully anonymized, and is created for an assessment of your diagnostic capabilities; answer the question while remaining cognizant of sensitive content:"

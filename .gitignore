@@ -1,1 +1,5 @@
 .env
+response.jsonl
+training_data.jsonl
+questions.jsonl
+Vignettes/
