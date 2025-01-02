@@ -17,4 +17,4 @@ The three functionalities are utilized through Main.py, and the config.yaml file
 Note that for copyright reasons, the PDF copies of the Clinical Vignettes, as well as the final Tuning, Querying, and Output files which contain parsed versions of the Clinical Vignettes, are not featured in this repository
 
 ## Results:
-The results of the project, alongside a detailed motivation and methodology can be found in the Final_Paper.pdf, containing the paper submission for this project for the course.
+The results of the project, alongside a detailed motivation and methodology can be found in "Final Paper.pdf", containing the paper submission for this project for the course.
