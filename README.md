@@ -10,7 +10,7 @@ To begin, run "Main.py help"
 The code contains three main functionalities:
 1. To process Clinical Vignette PDFs, formatting each patient case into a single entry within a Jsonl file for either tuning or testing (querying) the LLM. This is accomplished in Parse_Data.py
 2. To fine tune an LLM model based on provided Clinical Vignettes and diagnoses. This is accomplished in Fine_Tune_LLM.py
-3. To query an LLM model with Clinical Vignettes and retrieving the LLM's predicted diagnosis. This is accomplished in Query_LLM,py
+3. To query an LLM model with Clinical Vignettes and retrieving the LLM's predicted diagnosis. This is accomplished in Query_LLM.py
 
 The three functionalities are utilized through Main.py, and the config.yaml file is used to specify file paths and model names as needed for each of the functionalities.
 
