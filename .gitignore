@@ -3,3 +3,4 @@ response.jsonl
 training_data.jsonl
 questions.jsonl
 Vignettes/
+_pycache_/
